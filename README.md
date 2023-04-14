@@ -1,28 +1,30 @@
-# Efficient Moving Average
-This is an efficient implementation of moving average filter intended to be used for micro-controllers, Tested on STM32 series.
+# Moving Average
+This is an efficient implementation of moving average, optimise for 32 bit calculations, implement uint8/16/32, int 8/16/32 and float types. No dynamic memory usage
 
 # Example code
-This is a pseudo-code showing how one can use this library for his/her desired target platform.
+This is a pseudo-code showing how one can use this library
 ```c
-volatile uint32_t ADCValue = 0;
-uint32_t ADCValueFiltered = 0;
-FilterTypeDef filterStruct;
+#define FILTER_WIDTH 8
+moving_average_filter_f_t filter;
+uint16_t filter_buff[FILTER_WIDTH];
 
-int main(void)
-{
+uint16_t ADC_value;
+uint16_t ADC_value_filtered;
 
-    Moving_Average_Init(&filterStruct);
+int main(void){
+    moving_average_init_u16(&filter, filter_buff, FILTER_WIDTH);
 
-    while(1)
-    {
-        ADCValue = ADC_Get_Value(adc);
-        ADCValueFiltered = Moving_Average_Compute(ADCValue, &filterStruct);
+    while(1){
+        ADC_value = ADC_Get_Value();
+        moving_average_insert_u16(&filter, h);
+        ADC_value_filtered = moving_average_get_u16(&filter);
+        printf("%hu", ADC_value_filtered);
     }
 
     return 0;
 }
 ```
-You can change length of filter window by changing `#define WindowLength 10` in header file.
+You can change width of filter window by initialize filter with another parameters. Buffer must be equal, or greater, than filter width
 
 # Acknowledgement
-I would like to thank [Sepehr Hashtroudi](https://github.com/sepehrhashtroudi) for all the improvements he suggested to my original implementation of algorithm.
+I fork and modify this library: https://github.com/mhtb32
